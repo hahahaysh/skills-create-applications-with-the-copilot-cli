@@ -4,6 +4,9 @@ const {
   subtraction,
   multiplication,
   division,
+  modulo,
+  power,
+  squareRoot,
   calculate,
 } = require('../calculator');
 
@@ -32,26 +35,47 @@ describe('calculator arithmetic operations', () => {
     expect(division(-8, 2)).toBe(-4);
   });
 
+  test('calculates modulo, power, and square root correctly', () => {
+    expect(modulo(10, 3)).toBe(1);
+    expect(modulo(5, 2)).toBe(1);
+    expect(power(2, 3)).toBe(8);
+    expect(power(3, 4)).toBe(81);
+    expect(squareRoot(25)).toBe(5);
+    expect(squareRoot(16)).toBe(4);
+  });
+
   test('supports all basic operations through the calculate helper', () => {
     expect(calculate('add', 2, 3)).toBe(5);
     expect(calculate('subtract', 10, 4)).toBe(6);
     expect(calculate('multiply', 45, 2)).toBe(90);
     expect(calculate('divide', 20, 5)).toBe(4);
+    expect(calculate('modulo', 5, 2)).toBe(1);
+    expect(calculate('power', 2, 3)).toBe(8);
+    expect(calculate('squareRoot', 16)).toBe(4);
   });
 
   test('handles division by zero gracefully', () => {
     expect(() => division(10, 0)).toThrow('Division by zero is not allowed.');
     expect(() => calculate('divide', 10, 0)).toThrow('Division by zero is not allowed.');
+    expect(() => calculate('modulo', 10, 0)).toThrow('Modulo by zero is not allowed.');
+  });
+
+  test('handles negative square roots gracefully', () => {
+    expect(() => squareRoot(-1)).toThrow('Square root is not defined for negative numbers.');
+    expect(() => calculate('squareRoot', -1)).toThrow(
+      'Square root is not defined for negative numbers.'
+    );
   });
 
   test('rejects unsupported operations', () => {
-    expect(() => calculate('modulo', 10, 2)).toThrow(
-      'Unsupported operation: "modulo". Supported operations: add, subtract, multiply, divide.'
+    expect(() => calculate('average', 10, 2)).toThrow(
+      'Unsupported operation: "average". Supported operations: add, subtract, multiply, divide, modulo, power, squareRoot.'
     );
   });
 
   test('validates invalid numeric input', () => {
     expect(() => calculate('add', 'a', 2)).toThrow('Invalid left operand');
     expect(() => calculate('multiply', 4, 'b')).toThrow('Invalid right operand');
+    expect(() => calculate('squareRoot', 'c')).toThrow('Invalid value');
   });
 });
